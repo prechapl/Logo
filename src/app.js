@@ -160,7 +160,7 @@ class App extends Component {
     };
 
     gltfLoader.load(
-      "/AppAge-Icon.glb",
+      "/models/AppAge-Icon.glb",
       gltf => {
         onLoad(gltf);
       },
@@ -169,7 +169,7 @@ class App extends Component {
     );
 
     gltfLoader2.load(
-      "/AppAge-3D.glb",
+      "/models/AppAge-Type.glb",
       gltf => {
         onLoad2(gltf);
       },
