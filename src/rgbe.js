@@ -5,14 +5,15 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { EquirectangularToCubeGenerator } from "three/examples/jsm/loaders/EquirectangularToCubeGenerator.js";
 import { PMREMGenerator } from "three/examples/jsm/pmrem/PMREMGenerator.js";
+import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 import { PMREMCubeUVPacker } from "three/examples/jsm/pmrem/PMREMCubeUVPacker.js";
-
 let cubeGenerator, renderer, scene;
 
 class Rgbe extends Component {
   componentDidMount() {
     this.sceneSetup();
     this.animate();
+    this.lighting();
   }
 
   sceneSetup = () => {
@@ -72,9 +73,9 @@ class Rgbe extends Component {
             if (child.isMesh) {
               child.material = new THREE.MeshStandardMaterial({
                 envMap: envMap,
-                envMapIntensity: 1.5,
-                emissive: 0xfff000,
-                emissiveIntensity: 0.2,
+                // envMapIntensity: 1.5,
+                // emissive: 0xfff000,
+                // emissiveIntensity: 0.2,
                 color: 0xfddf73,
                 metalness: 1,
                 roughness: 0.2
@@ -102,6 +103,50 @@ class Rgbe extends Component {
     this.controls.update();
     window.addEventListener("resize", this.onWindowResize, false);
   };
+
+  lighting = () => {
+    // Blue back
+    RectAreaLightUniformsLib.init();
+    this.rectLight1 = new THREE.RectAreaLight(0x0030ff, 1, 5, 50);
+    this.rectLight1.position.set(0, 0, -10);
+    this.rectLight1.lookAt(0, 0, 0);
+    scene.add(this.rectLight1);
+
+    // Blue 2
+    this.rectLight2 = new THREE.RectAreaLight(0x0030ff, 1, 5, 50);
+    this.rectLight2.position.x = -9;
+    this.rectLight2.position.z = 3;
+    this.rectLight2.lookAt(0, 0, 0);
+    scene.add(this.rectLight2);
+
+    // Red
+    this.rectLight3 = new THREE.RectAreaLight(0xfb3f3f, 1, 5, 50);
+    this.rectLight3.position.x = 8;
+    this.rectLight3.position.z = 3;
+    this.rectLight3.lookAt(0, 0, 0);
+    scene.add(this.rectLight3);
+
+    // Green
+    this.rectLight4 = new THREE.RectAreaLight(0x18ff00, 1, 5, 50);
+    this.rectLight4.position.x = -8;
+    this.rectLight4.position.z = -6;
+    this.rectLight4.lookAt(0, 0, 0);
+    scene.add(this.rectLight4);
+
+    //Green 2
+    this.rectLight5 = new THREE.RectAreaLight(0x18ff00, 1, 10, 50);
+    this.rectLight5.position.set(0, 0, 10);
+    this.rectLight5.lookAt(0, 0, 0);
+    scene.add(this.rectLight5);
+
+    // Red 2
+    this.rectLight6 = new THREE.RectAreaLight(0xfb3f3f, 1, 15, 50);
+    this.rectLight6.position.x = -10;
+    this.rectLight6.position.z = 10;
+    this.rectLight6.lookAt(0, 0, 0);
+    scene.add(this.rectLight6);
+  };
+
   onWindowResize = () => {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
@@ -110,6 +155,10 @@ class Rgbe extends Component {
 
   animate = () => {
     requestAnimationFrame(this.animate);
+    if (this.Icon && this.Type) {
+      this.Icon.rotation.y += 0.005;
+      this.Type.rotation.y += 0.005;
+    }
     renderer.render(scene, this.camera);
   };
 
